@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+
+<html lang="id">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Kalkulator Rekap Saldo</title>
+
+  <style>
+
+    :root {
+
+      --bg: #f1f5f9;
+
+      --card: #ffffff;
+
+      --text: #0f172a;
+
+      --muted: #64748b;
+
+      --border: #e2e8f0;
+
+      --primary: #2563eb;
+
+      --primary-hover: #1d4ed8;
+
+      --danger: #dc2626;
+
+      --danger-bg: #fef2f2;
+
+      --success: #16a34a;
+
+      --success-hover: #15803d;
+
+      --radius: 14px;
+
+    }
+
+
+
+    * {
+
+      box-sizing: border-box;
+
+      margin: 0;
+
+      padding: 0;
+
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+    }
+
+
+
+    body {
+
+      background: var(--bg);
+
+      color: var(--text);
+
+      padding: 20px 14px 48px;
+
+      line-height: 1.5;
+
+    }
+
+
+
+    .container {
+
+      max-width: 560px;
+
+      margin: 0 auto;
+
+    }
+
+
+
+    .header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 16px;
+
+      gap: 10px;
+
+    }
+
+
+
+    .header h1 {
+
+      font-size: 1.25rem;
+
+      font-weight: 700;
+
+    }
+
+
+
+    .header-actions {
+
+      display: flex;
+
+      gap: 8px;
+
+    }
+
+
+
+    .btn {
+
+      border: 1px solid var(--border);
+
+      background: var(--card);
+
+      color: var(--text);
+
+      padding: 8px 12px;
+
+      border-radius: 10px;
+
+      font-size: 0.85rem;
+
+      font-weight: 600;
+
+      cursor: pointer;
+
+      display: inline-flex;
+
+      align-items: center;
+
+      gap: 6px;
+
+      transition: all 0.15s ease;
+
+    }
+
+
+
+    .btn:hover {
+
+      background: #f8fafc;
+
+    }
+
+
+
+    .btn-primary {
+
+      background: var(--primary);
+
+      color: #fff;
+
+      border-color: var(--primary);
+
+    }
+
+
+
+    .btn-primary:hover {
+
+      background: var(--primary-hover);
+
+    }
+
+
+
+    .btn-success {
+
+      background: var(--success);
+
+      color: #fff;
+
+      border-color: var(--success);
+
+      width: 100%;
+
+      justify-content: center;
+
+      padding: 12px;
+
+      font-size: 0.95rem;
+
+    }
+
+
+
+    .btn-success:hover {
+
+      background: var(--success-hover);
+
+    }
+
+
+
+    .card {
+
+      background: var(--card);
+
+      border: 1px solid var(--border);
+
+      border-radius: var(--radius);
+
+      padding: 16px;
+
+      margin-bottom: 14px;
+
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+
+    }
+
+
+
+    .card-header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 12px;
+
+    }
+
+
+
+    .card-title {
+
+      font-size: 0.95rem;
+
+      font-weight: 700;
+
+      color: var(--text);
+
+    }
+
+
+
+    .badge {
+
+      font-size: 0.8rem;
+
+      font-weight: 700;
+
+      padding: 4px 10px;
+
+      border-radius: 999px;
+
+      background: #eff6ff;
+
+      color: var(--primary);
+
+    }
+
+
+
+    .badge-danger {
+
+      background: var(--danger-bg);
+
+      color: var(--danger);
+
+    }
+
+
+
+    .item-row {
+
+      display: grid;
+
+      grid-template-columns: 1fr 150px 36px;
+
+      gap: 8px;
+
+      margin-bottom: 8px;
+
+      align-items: center;
+
+    }
+
+
+
+    input[type="text"] {
+
+      width: 100%;
+
+      padding: 9px 11px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 9px;
+
+      font-size: 0.92rem;
+
+      color: var(--text);
+
+      outline: none;
+
+      transition: border-color 0.15s;
+
+    }
+
+
+
+    input[type="text"]:focus {
+
+      border-color: var(--primary);
+
+    }
+
+
+
+    .num-input {
+
+      text-align: right;
+
+      font-variant-numeric: tabular-nums;
+
+      font-weight: 600;
+
+    }
+
+
+
+    .btn-del {
+
+      height: 36px;
+
+      width: 36px;
+
+      border: 1px solid var(--border);
+
+      background: #fff;
+
+      color: var(--danger);
+
+      border-radius: 9px;
+
+      cursor: pointer;
+
+      font-weight: 700;
+
+      font-size: 1rem;
+
+    }
+
+
+
+    .btn-del:hover {
+
+      background: var(--danger-bg);
+
+    }
+
+
+
+    .field-group {
+
+      display: grid;
+
+      grid-template-columns: 1fr 180px;
+
+      gap: 10px;
+
+      align-items: center;
+
+      margin-bottom: 10px;
+
+    }
+
+
+
+    .field-group:last-child {
+
+      margin-bottom: 0;
+
+    }
+
+
+
+    .field-label {
+
+      font-size: 0.92rem;
+
+      font-weight: 600;
+
+    }
+
+
+
+    .result-card {
+
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+
+      color: #fff;
+
+      border: none;
+
+    }
+
+
+
+    .result-row {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      font-size: 0.88rem;
+
+      color: #cbd5e1;
+
+      margin-bottom: 6px;
+
+    }
+
+
+
+    .result-divider {
+
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+
+      margin: 10px 0;
+
+    }
+
+
+
+    .result-main {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: baseline;
+
+      margin-bottom: 14px;
+
+    }
+
+
+
+    .result-main span:first-child {
+
+      font-size: 0.95rem;
+
+      font-weight: 600;
+
+      color: #e2e8f0;
+
+    }
+
+
+
+    .result-value {
+
+      font-size: 1.65rem;
+
+      font-weight: 800;
+
+      font-variant-numeric: tabular-nums;
+
+      color: #38bdf8;
+
+    }
+
+
+
+    .result-value.negative {
+
+      color: #f87171;
+
+    }
+
+
+
+    /* Modal */
+
+    .modal-backdrop {
+
+      position: fixed;
+
+      inset: 0;
+
+      background: rgba(15, 23, 42, 0.55);
+
+      display: none;
+
+      align-items: center;
+
+      justify-content: center;
+
+      padding: 16px;
+
+      z-index: 50;
+
+    }
+
+
+
+    .modal-backdrop.open {
+
+      display: flex;
+
+    }
+
+
+
+    .modal {
+
+      background: #fff;
+
+      width: 100%;
+
+      max-width: 480px;
+
+      border-radius: var(--radius);
+
+      padding: 18px;
+
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+
+    }
+
+
+
+    .modal-header {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      align-items: center;
+
+      margin-bottom: 10px;
+
+    }
+
+
+
+    .modal-header h2 {
+
+      font-size: 1.05rem;
+
+      font-weight: 700;
+
+    }
+
+
+
+    textarea {
+
+      width: 100%;
+
+      height: 170px;
+
+      padding: 10px;
+
+      border: 1px solid var(--border);
+
+      border-radius: 10px;
+
+      font-size: 0.88rem;
+
+      resize: vertical;
+
+      margin: 8px 0 12px;
+
+      outline: none;
+
+    }
+
+
+
+    textarea:focus {
+
+      border-color: var(--primary);
+
+    }
+
+
+
+    .modal-actions {
+
+      display: flex;
+
+      justify-content: space-between;
+
+      gap: 8px;
+
+      flex-wrap: wrap;
+
+    }
+
+
+
+    .toast {
+
+      position: fixed;
+
+      bottom: 18px;
+
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      background: #0f172a;
+
+      color: #fff;
+
+      padding: 9px 16px;
+
+      border-radius: 999px;
+
+      font-size: 0.85rem;
+
+      font-weight: 600;
+
+      opacity: 0;
+
+      pointer-events: none;
+
+      transition: opacity 0.2s;
+
+      z-index: 100;
+
+    }
+
+
+
+    .toast.show {
+
+      opacity: 1;
+
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="header">
+
+      <h1>Kalkulator Rekap Saldo</h1>
+
+      <div class="header-actions">
+
+        <button type="button" class="btn" id="btnOpenPaste">Paste Laporan</button>
+
+        <button type="button" class="btn" id="btnReset">Reset</button>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Daftar Saldo -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <span class="card-title">Daftar Saldo</span>
+
+        <span class="badge" id="totalSaldoBadge">0</span>
+
+      </div>
+
+      <div id="saldoList"></div>
+
+      <button type="button" class="btn" id="btnAddRow" style="margin-top: 6px; width: 100%; justify-content: center;">
+
+        + Tambah Item Saldo
+
+      </button>
+
+    </div>
+
+
+
+    <!-- Pengurang -->
+
+    <div class="card">
+
+      <div class="card-header">
+
+        <span class="card-title">Saldo Reseller &amp; Komisi</span>
+
+        <span class="badge badge-danger" id="totalPengurangBadge">0</span>
+
+      </div>
+
+      <div class="field-group">
+
+        <label class="field-label" for="saldoReseller">Saldo Reseller</label>
+
+        <input type="text" id="saldoReseller" class="num-input" inputmode="numeric" value="8.298.898" />
+
+      </div>
+
+      <div class="field-group">
+
+        <label class="field-label" for="komisi">Komisi</label>
+
+        <input type="text" id="komisi" class="num-input" inputmode="numeric" value="432.022" />
+
+      </div>
+
+    </div>
+
+
+
+    <!-- Hasil Akhir -->
+
+    <div class="card result-card">
+
+      <div class="result-row">
+
+        <span>Total Daftar Saldo</span>
+
+        <span id="summaryDaftar">0</span>
+
+      </div>
+
+      <div class="result-row">
+
+        <span>Total Pengurang (Reseller + Komisi)</span>
+
+        <span id="summaryPengurang">0</span>
+
+      </div>
+
+      <div class="result-divider"></div>
+
+      <div class="result-main">
+
+        <span>Hasil Akhir</span>
+
+        <span class="result-value" id="hasilAkhir">0</span>
+
+      </div>
+
+      <button type="button" class="btn btn-success" id="btnCopyWa">Salin Ringkasan (WhatsApp)</button>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- Modal Paste Laporan -->
+
+  <div class="modal-backdrop" id="pasteModal">
+
+    <div class="modal">
+
+      <div class="modal-header">
+
+        <h2>Paste Laporan Saldo</h2>
+
+        <button type="button" class="btn" id="btnClosePaste">Tutup</button>
+
+      </div>
+
+      <p style="font-size: 0.83rem; color: var(--muted);">
+
+        Tempel teks laporan Anda di bawah ini untuk mengisi semua kolom secara otomatis.
+
+      </p>
+
+      <textarea id="pasteInput" placeholder="Contoh:
+
+OH: kenzie - 2.116.195
+
+IP: DIGIFLAZZ - 1.680.314
+
+Saldo Reseller 8.298.898
+
+Komisi 432.022"></textarea>
+
+      <div class="modal-actions">
+
+        <div style="display: flex; gap: 6px;">
+
+          <button type="button" class="btn" id="btnFillSample">Isi Contoh</button>
+
+          <button type="button" class="btn" id="btnClipboard">Tempel Clipboard</button>
+
+        </div>
+
+        <button type="button" class="btn btn-primary" id="btnProcessPaste">Terapkan</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="toast" id="toast">Tersalin ke clipboard!</div>
+
+
+
+  <script>
+
+    const defaultItems = [
+
+      { name: "OH: kenzie", amount: 2116195 },
+
+      { name: "IP: DIGIFLAZZ", amount: 1680314 }
+
+    ];
+
+
+
+    let items = JSON.parse(JSON.stringify(defaultItems));
+
+
+
+    const saldoListEl = document.getElementById("saldoList");
+
+    const saldoResellerEl = document.getElementById("saldoReseller");
+
+    const komisiEl = document.getElementById("komisi");
+
+
+
+    function formatRibuan(num) {
+
+      const isNeg = num < 0;
+
+      const absStr = Math.abs(Math.round(num)).toString();
+
+      const formatted = absStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+      return (isNeg ? "-" : "") + formatted;
+
+    }
+
+
+
+    function parseAngka(str) {
+
+      if (typeof str === "number") return str;
+
+      const clean = String(str || "").replace(/[^0-9-]/g, "");
+
+      const val = parseInt(clean, 10);
+
+      return isNaN(val) ? 0 : val;
+
+    }
+
+
+
+    function showToast(msg) {
+
+      const t = document.getElementById("toast");
+
+      t.textContent = msg;
+
+      t.classList.add("show");
+
+      setTimeout(() => t.classList.remove("show"), 2200);
+
+    }
+
+
+
+    function renderItems() {
+
+      saldoListEl.innerHTML = "";
+
+      items.forEach((item, idx) => {
+
+        const row = document.createElement("div");
+
+        row.className = "item-row";
+
+
+
+        const nameInput = document.createElement("input");
+
+        nameInput.type = "text";
+
+        nameInput.placeholder = "Nama Saldo";
+
+        nameInput.value = item.name;
+
+        nameInput.addEventListener("input", (e) => {
+
+          items[idx].name = e.target.value;
+
+        });
+
+
+
+        const valInput = document.createElement("input");
+
+        valInput.type = "text";
+
+        valInput.className = "num-input";
+
+        valInput.inputMode = "numeric";
+
+        valInput.value = formatRibuan(item.amount);
+
+        valInput.addEventListener("input", (e) => {
+
+          const num = parseAngka(e.target.value);
+
+          items[idx].amount = num;
+
+          e.target.value = formatRibuan(num);
+
+          recalculate();
+
+        });
+
+
+
+        const delBtn = document.createElement("button");
+
+        delBtn.type = "button";
+
+        delBtn.className = "btn-del";
+
+        delBtn.textContent = "×";
+
+        delBtn.title = "Hapus baris";
+
+        delBtn.addEventListener("click", () => {
+
+          if (items.length > 1) {
+
+            items.splice(idx, 1);
+
+          } else {
+
+            items[0] = { name: "", amount: 0 };
+
+          }
+
+          renderItems();
+
+          recalculate();
+
+        });
+
+
+
+        row.appendChild(nameInput);
+
+        row.appendChild(valInput);
+
+        row.appendChild(delBtn);
+
+        saldoListEl.appendChild(row);
+
+      });
+
+    }
+
+
+
+    function recalculate() {
+
+      const totalDaftar = items.reduce((sum, item) => sum + (item.amount || 0), 0);
+
+      const reseller = parseAngka(saldoResellerEl.value);
+
+      const komisi = parseAngka(komisiEl.value);
+
+      const totalPengurang = reseller + komisi;
+
+      const hasil = totalDaftar - totalPengurang;
+
+
+
+      document.getElementById("totalSaldoBadge").textContent = formatRibuan(totalDaftar);
+
+      document.getElementById("totalPengurangBadge").textContent = formatRibuan(totalPengurang);
+
+      document.getElementById("summaryDaftar").textContent = formatRibuan(totalDaftar);
+
+      document.getElementById("summaryPengurang").textContent = formatRibuan(totalPengurang);
+
+
+
+      const hasilEl = document.getElementById("hasilAkhir");
+
+      hasilEl.textContent = formatRibuan(hasil);
+
+      hasilEl.classList.toggle("negative", hasil < 0);
+
+    }
+
+
+
+    [saldoResellerEl, komisiEl].forEach((el) => {
+
+      el.addEventListener("input", (e) => {
+
+        const num = parseAngka(e.target.value);
+
+        e.target.value = formatRibuan(num);
+
+        recalculate();
+
+      });
+
+    });
+
+
+
+    document.getElementById("btnAddRow").addEventListener("click", () => {
+
+      items.push({ name: "", amount: 0 });
+
+      renderItems();
+
+      recalculate();
+
+    });
+
+
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+
+      items = [{ name: "OH: kenzie", amount: 0 }, { name: "IP: DIGIFLAZZ", amount: 0 }];
+
+      saldoResellerEl.value = "0";
+
+      komisiEl.value = "0";
+
+      renderItems();
+
+      recalculate();
+
+      showToast("Semua input direset");
+
+    });
+
+
+
+    // Copy WhatsApp
+
+    document.getElementById("btnCopyWa").addEventListener("click", () => {
+
+      const today = new Date().toLocaleDateString("id-ID", {
+
+        day: "2-digit",
+
+        month: "short",
+
+        year: "numeric"
+
+      });
+
+      const totalDaftar = items.reduce((sum, item) => sum + (item.amount || 0), 0);
+
+      const reseller = parseAngka(saldoResellerEl.value);
+
+      const komisi = parseAngka(komisiEl.value);
+
+      const totalPengurang = reseller + komisi;
+
+      const hasil = totalDaftar - totalPengurang;
+
+
+
+      const listLines = items
+
+        .filter((i) => i.name.trim() !== "" || i.amount !== 0)
+
+        .map((i) => `• ${i.name || "Saldo"}: ${formatRibuan(i.amount)}`)
+
+        .join("\n");
+
+
+
+      const text = [
+
+        `*REKAP SALDO (${today})*`,
+
+        "",
+
+        "*Daftar Saldo:*",
+
+        listLines || "• 0",
+
+        `Total Daftar Saldo: *${formatRibuan(totalDaftar)}*`,
+
+        "",
+
+        "*Pengurang:*",
+
+        `• Saldo Reseller: ${formatRibuan(reseller)}`,
+
+        `• Komisi: ${formatRibuan(komisi)}`,
+
+        `Total Pengurang: *${formatRibuan(totalPengurang)}*`,
+
+        "",
+
+        `*Hasil Akhir: ${formatRibuan(hasil)}*`
+
+      ].join("\n");
+
+
+
+      navigator.clipboard.writeText(text).then(() => {
+
+        showToast("Ringkasan WhatsApp disalin!");
+
+      });
+
+    });
+
+
+
+    // Modal Paste Laporan
+
+    const pasteModal = document.getElementById("pasteModal");
+
+    const pasteInput = document.getElementById("pasteInput");
+
+
+
+    document.getElementById("btnOpenPaste").addEventListener("click", () => {
+
+      pasteModal.classList.add("open");
+
+      pasteInput.focus();
+
+    });
+
+
+
+    document.getElementById("btnClosePaste").addEventListener("click", () => {
+
+      pasteModal.classList.remove("open");
+
+    });
+
+
+
+    pasteModal.addEventListener("click", (e) => {
+
+      if (e.target === pasteModal) pasteModal.classList.remove("open");
+
+    });
+
+
+
+    document.addEventListener("keydown", (e) => {
+
+      if (e.key === "Escape") pasteModal.classList.remove("open");
+
+    });
+
+
+
+    document.getElementById("btnFillSample").addEventListener("click", () => {
+
+      pasteInput.value = `Daftar Saldo:
+
+OH: kenzie - 2.116.195
+
+IP: DIGIFLAZZ - 1.680.314
+
+
+
+Saldo Reseller 8.298.898
+
+Komisi 432.022`;
+
+    });
+
+
+
+    document.getElementById("btnClipboard").addEventListener("click", async () => {
+
+      try {
+
+        const clip = await navigator.clipboard.readText();
+
+        pasteInput.value = clip;
+
+      } catch (err) {
+
+        showToast("Gagal membaca clipboard, tempel manual");
+
+      }
+
+    });
+
+
+
+    document.getElementById("btnProcessPaste").addEventListener("click", () => {
+
+      const raw = pasteInput.value.trim();
+
+      if (!raw) return;
+
+
+
+      const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+      const newItems = [];
+
+      let foundReseller = null;
+
+      let foundKomisi = null;
+
+
+
+      lines.forEach((line) => {
+
+        const lower = line.toLowerCase();
+
+        if (lower.startsWith("daftar saldo") || lower.startsWith("rekap saldo")) return;
+
+        if (lower.startsWith("saldo suplier")) return;
+
+
+
+        const numMatch = line.match(/(-?[0-9][0-9.,]*)\s*$/);
+
+        if (!numMatch) return;
+
+        const val = parseAngka(numMatch[1]);
+
+
+
+        if (lower.includes("reseller")) {
+
+          foundReseller = val;
+
+        } else if (lower.includes("komisi")) {
+
+          foundKomisi = val;
+
+        } else {
+
+          const labelPart = line
+
+            .slice(0, numMatch.index)
+
+            .replace(/[-:\u2022*]+\s*$/, "")
+
+            .replace(/^[\u2022*-]+\s*/, "")
+
+            .trim();
+
+          if (labelPart) {
+
+            newItems.push({ name: labelPart, amount: val });
+
+          }
+
+        }
+
+      });
+
+
+
+      if (newItems.length > 0) items = newItems;
+
+      if (foundReseller !== null) saldoResellerEl.value = formatRibuan(foundReseller);
+
+      if (foundKomisi !== null) komisiEl.value = formatRibuan(foundKomisi);
+
+
+
+      renderItems();
+
+      recalculate();
+
+      pasteModal.classList.remove("open");
+
+      showToast("Laporan berhasil diterapkan!");
+
+    });
+
+
+
+    renderItems();
+
+    recalculate();
+
+  </script>
+
+</body>
+
+</html>
