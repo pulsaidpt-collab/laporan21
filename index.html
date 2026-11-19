@@ -1,1311 +1,896 @@
 <!DOCTYPE html>
-
 <html lang="id">
-
 <head>
-
   <meta charset="UTF-8" />
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Kalkulator Rekap Saldo</title>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-
     :root {
-
       --bg: #f1f5f9;
-
       --card: #ffffff;
-
       --text: #0f172a;
-
       --muted: #64748b;
-
       --border: #e2e8f0;
-
       --primary: #2563eb;
-
       --primary-hover: #1d4ed8;
-
       --danger: #dc2626;
-
       --danger-bg: #fef2f2;
-
       --success: #16a34a;
-
       --success-hover: #15803d;
-
       --radius: 14px;
-
     }
-
-
 
     * {
-
       box-sizing: border-box;
-
       margin: 0;
-
       padding: 0;
-
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
     }
-
-
 
     body {
-
       background: var(--bg);
-
       color: var(--text);
-
       padding: 20px 14px 48px;
-
       line-height: 1.5;
-
     }
-
-
 
     .container {
-
       max-width: 560px;
-
       margin: 0 auto;
-
     }
-
-
 
     .header {
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       margin-bottom: 16px;
-
       gap: 10px;
-
     }
-
-
 
     .header h1 {
-
       font-size: 1.25rem;
-
       font-weight: 700;
-
     }
-
-
 
     .header-actions {
-
       display: flex;
-
       gap: 8px;
-
     }
-
-
 
     .btn {
-
       border: 1px solid var(--border);
-
       background: var(--card);
-
       color: var(--text);
-
       padding: 8px 12px;
-
       border-radius: 10px;
-
       font-size: 0.85rem;
-
       font-weight: 600;
-
       cursor: pointer;
-
       display: inline-flex;
-
       align-items: center;
-
       gap: 6px;
-
       transition: all 0.15s ease;
-
     }
-
-
 
     .btn:hover {
-
       background: #f8fafc;
-
     }
-
-
 
     .btn-primary {
-
       background: var(--primary);
-
       color: #fff;
-
       border-color: var(--primary);
-
     }
-
-
 
     .btn-primary:hover {
-
       background: var(--primary-hover);
-
     }
-
-
 
     .btn-success {
-
       background: var(--success);
-
       color: #fff;
-
       border-color: var(--success);
-
       width: 100%;
-
       justify-content: center;
-
       padding: 12px;
-
       font-size: 0.95rem;
-
     }
-
-
 
     .btn-success:hover {
-
       background: var(--success-hover);
-
     }
 
+    .btn-share {
+      background: #0284c7;
+      color: #fff;
+      border-color: #0369a1;
+      width: 100%;
+      justify-content: center;
+      padding: 12px;
+      font-size: 0.95rem;
+    }
 
+    .btn-share:hover {
+      background: #0369a1;
+    }
+
+    .action-stack {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 460px) {
+      .action-stack {
+        grid-template-columns: 1fr;
+      }
+    }
 
     .card {
-
       background: var(--card);
-
       border: 1px solid var(--border);
-
       border-radius: var(--radius);
-
       padding: 16px;
-
       margin-bottom: 14px;
-
       box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
-
     }
-
-
 
     .card-header {
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       margin-bottom: 12px;
-
     }
-
-
 
     .card-title {
-
       font-size: 0.95rem;
-
       font-weight: 700;
-
       color: var(--text);
-
     }
-
-
 
     .badge {
-
       font-size: 0.8rem;
-
       font-weight: 700;
-
       padding: 4px 10px;
-
       border-radius: 999px;
-
       background: #eff6ff;
-
       color: var(--primary);
-
     }
-
-
 
     .badge-danger {
-
       background: var(--danger-bg);
-
       color: var(--danger);
-
     }
-
-
 
     .item-row {
-
       display: grid;
-
       grid-template-columns: 1fr 150px 36px;
-
       gap: 8px;
-
       margin-bottom: 8px;
-
       align-items: center;
-
     }
-
-
 
     input[type="text"] {
-
       width: 100%;
-
       padding: 9px 11px;
-
       border: 1px solid var(--border);
-
       border-radius: 9px;
-
       font-size: 0.92rem;
-
       color: var(--text);
-
       outline: none;
-
       transition: border-color 0.15s;
-
     }
-
-
 
     input[type="text"]:focus {
-
       border-color: var(--primary);
-
     }
-
-
 
     .num-input {
-
       text-align: right;
-
       font-variant-numeric: tabular-nums;
-
       font-weight: 600;
-
     }
-
-
 
     .btn-del {
-
       height: 36px;
-
       width: 36px;
-
       border: 1px solid var(--border);
-
       background: #fff;
-
       color: var(--danger);
-
       border-radius: 9px;
-
       cursor: pointer;
-
       font-weight: 700;
-
       font-size: 1rem;
-
     }
-
-
 
     .btn-del:hover {
-
       background: var(--danger-bg);
-
     }
-
-
 
     .field-group {
-
       display: grid;
-
       grid-template-columns: 1fr 180px;
-
       gap: 10px;
-
       align-items: center;
-
       margin-bottom: 10px;
-
     }
-
-
 
     .field-group:last-child {
-
       margin-bottom: 0;
-
     }
-
-
 
     .field-label {
-
       font-size: 0.92rem;
-
       font-weight: 600;
-
     }
-
-
 
     .result-card {
-
       background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-
       color: #fff;
-
       border: none;
-
     }
-
-
 
     .result-row {
-
       display: flex;
-
       justify-content: space-between;
-
       font-size: 0.88rem;
-
       color: #cbd5e1;
-
       margin-bottom: 6px;
-
     }
-
-
 
     .result-divider {
-
       border-top: 1px solid rgba(255, 255, 255, 0.15);
-
       margin: 10px 0;
-
     }
-
-
 
     .result-main {
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: baseline;
-
       margin-bottom: 14px;
-
     }
-
-
 
     .result-main span:first-child {
-
       font-size: 0.95rem;
-
       font-weight: 600;
-
       color: #e2e8f0;
-
     }
-
-
 
     .result-value {
-
       font-size: 1.65rem;
-
       font-weight: 800;
-
       font-variant-numeric: tabular-nums;
-
       color: #38bdf8;
-
     }
-
-
 
     .result-value.negative {
-
       color: #f87171;
-
     }
 
-
+    .helper-note {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-top: 10px;
+      text-align: center;
+    }
 
     /* Modal */
-
     .modal-backdrop {
-
       position: fixed;
-
       inset: 0;
-
       background: rgba(15, 23, 42, 0.55);
-
       display: none;
-
       align-items: center;
-
       justify-content: center;
-
       padding: 16px;
-
       z-index: 50;
-
     }
-
-
 
     .modal-backdrop.open {
-
       display: flex;
-
     }
-
-
 
     .modal {
-
       background: #fff;
-
       width: 100%;
-
       max-width: 480px;
-
       border-radius: var(--radius);
-
       padding: 18px;
-
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-
     }
-
-
 
     .modal-header {
-
       display: flex;
-
       justify-content: space-between;
-
       align-items: center;
-
       margin-bottom: 10px;
-
     }
-
-
 
     .modal-header h2 {
-
       font-size: 1.05rem;
-
       font-weight: 700;
-
     }
-
-
 
     textarea {
-
       width: 100%;
-
       height: 170px;
-
       padding: 10px;
-
       border: 1px solid var(--border);
-
       border-radius: 10px;
-
       font-size: 0.88rem;
-
       resize: vertical;
-
       margin: 8px 0 12px;
-
       outline: none;
-
     }
-
-
 
     textarea:focus {
-
       border-color: var(--primary);
-
     }
-
-
 
     .modal-actions {
-
       display: flex;
-
       justify-content: space-between;
-
       gap: 8px;
-
       flex-wrap: wrap;
-
     }
-
-
 
     .toast {
-
       position: fixed;
-
       bottom: 18px;
-
       left: 50%;
-
       transform: translateX(-50%);
-
       background: #0f172a;
-
       color: #fff;
-
       padding: 9px 16px;
-
       border-radius: 999px;
-
       font-size: 0.85rem;
-
       font-weight: 600;
-
       opacity: 0;
-
       pointer-events: none;
-
       transition: opacity 0.2s;
-
       z-index: 100;
-
     }
-
-
 
     .toast.show {
-
       opacity: 1;
-
     }
-
   </style>
-
 </head>
-
 <body>
-
   <div class="container">
-
     <div class="header">
-
       <h1>Kalkulator Rekap Saldo</h1>
-
       <div class="header-actions">
-
         <button type="button" class="btn" id="btnOpenPaste">Paste Laporan</button>
-
         <button type="button" class="btn" id="btnReset">Reset</button>
-
       </div>
-
     </div>
-
-
 
     <!-- Daftar Saldo -->
-
     <div class="card">
-
       <div class="card-header">
-
         <span class="card-title">Daftar Saldo</span>
-
         <span class="badge" id="totalSaldoBadge">0</span>
-
       </div>
-
       <div id="saldoList"></div>
-
       <button type="button" class="btn" id="btnAddRow" style="margin-top: 6px; width: 100%; justify-content: center;">
-
         + Tambah Item Saldo
-
       </button>
-
     </div>
-
-
 
     <!-- Pengurang -->
-
     <div class="card">
-
       <div class="card-header">
-
         <span class="card-title">Saldo Reseller &amp; Komisi</span>
-
         <span class="badge badge-danger" id="totalPengurangBadge">0</span>
-
       </div>
-
       <div class="field-group">
-
         <label class="field-label" for="saldoReseller">Saldo Reseller</label>
-
         <input type="text" id="saldoReseller" class="num-input" inputmode="numeric" value="8.298.898" />
-
       </div>
-
       <div class="field-group">
-
         <label class="field-label" for="komisi">Komisi</label>
-
         <input type="text" id="komisi" class="num-input" inputmode="numeric" value="432.022" />
-
       </div>
-
     </div>
-
-
 
     <!-- Hasil Akhir -->
-
     <div class="card result-card">
-
       <div class="result-row">
-
         <span>Total Daftar Saldo</span>
-
         <span id="summaryDaftar">0</span>
-
       </div>
-
       <div class="result-row">
-
         <span>Total Pengurang (Reseller + Komisi)</span>
-
         <span id="summaryPengurang">0</span>
-
       </div>
-
       <div class="result-divider"></div>
-
       <div class="result-main">
-
         <span>Hasil Akhir</span>
-
         <span class="result-value" id="hasilAkhir">0</span>
-
       </div>
-
-      <button type="button" class="btn btn-success" id="btnCopyWa">Salin Ringkasan (WhatsApp)</button>
-
+      <div class="action-stack">
+        <button type="button" class="btn btn-success" id="btnCopyWa">Salin Teks WA</button>
+        <button type="button" class="btn btn-share" id="btnSharePdfWa">Bagikan PDF ke WA</button>
+      </div>
+      <p class="helper-note">
+        Membuat file PDF otomatis lalu membuka menu Bagikan (Pilih WhatsApp). Jika di PC/browser lama, PDF otomatis terunduh.
+      </p>
     </div>
-
   </div>
-
-
 
   <!-- Modal Paste Laporan -->
-
   <div class="modal-backdrop" id="pasteModal">
-
     <div class="modal">
-
       <div class="modal-header">
-
         <h2>Paste Laporan Saldo</h2>
-
         <button type="button" class="btn" id="btnClosePaste">Tutup</button>
-
       </div>
-
       <p style="font-size: 0.83rem; color: var(--muted);">
-
         Tempel teks laporan Anda di bawah ini untuk mengisi semua kolom secara otomatis.
-
       </p>
-
       <textarea id="pasteInput" placeholder="Contoh:
-
 OH: kenzie - 2.116.195
-
 IP: DIGIFLAZZ - 1.680.314
-
 Saldo Reseller 8.298.898
-
 Komisi 432.022"></textarea>
-
       <div class="modal-actions">
-
         <div style="display: flex; gap: 6px;">
-
           <button type="button" class="btn" id="btnFillSample">Isi Contoh</button>
-
           <button type="button" class="btn" id="btnClipboard">Tempel Clipboard</button>
-
         </div>
-
         <button type="button" class="btn btn-primary" id="btnProcessPaste">Terapkan</button>
-
       </div>
-
     </div>
-
   </div>
-
-
 
   <div class="toast" id="toast">Tersalin ke clipboard!</div>
 
-
-
   <script>
-
     const defaultItems = [
-
       { name: "OH: kenzie", amount: 2116195 },
-
       { name: "IP: DIGIFLAZZ", amount: 1680314 }
-
     ];
-
-
 
     let items = JSON.parse(JSON.stringify(defaultItems));
 
-
-
     const saldoListEl = document.getElementById("saldoList");
-
     const saldoResellerEl = document.getElementById("saldoReseller");
-
     const komisiEl = document.getElementById("komisi");
 
-
-
     function formatRibuan(num) {
-
       const isNeg = num < 0;
-
       const absStr = Math.abs(Math.round(num)).toString();
-
       const formatted = absStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-
       return (isNeg ? "-" : "") + formatted;
-
     }
-
-
 
     function parseAngka(str) {
-
       if (typeof str === "number") return str;
-
       const clean = String(str || "").replace(/[^0-9-]/g, "");
-
       const val = parseInt(clean, 10);
-
       return isNaN(val) ? 0 : val;
-
     }
-
-
 
     function showToast(msg) {
-
       const t = document.getElementById("toast");
-
       t.textContent = msg;
-
       t.classList.add("show");
-
-      setTimeout(() => t.classList.remove("show"), 2200);
-
+      setTimeout(() => t.classList.remove("show"), 2500);
     }
 
-
-
-    function renderItems() {
-
-      saldoListEl.innerHTML = "";
-
-      items.forEach((item, idx) => {
-
-        const row = document.createElement("div");
-
-        row.className = "item-row";
-
-
-
-        const nameInput = document.createElement("input");
-
-        nameInput.type = "text";
-
-        nameInput.placeholder = "Nama Saldo";
-
-        nameInput.value = item.name;
-
-        nameInput.addEventListener("input", (e) => {
-
-          items[idx].name = e.target.value;
-
-        });
-
-
-
-        const valInput = document.createElement("input");
-
-        valInput.type = "text";
-
-        valInput.className = "num-input";
-
-        valInput.inputMode = "numeric";
-
-        valInput.value = formatRibuan(item.amount);
-
-        valInput.addEventListener("input", (e) => {
-
-          const num = parseAngka(e.target.value);
-
-          items[idx].amount = num;
-
-          e.target.value = formatRibuan(num);
-
-          recalculate();
-
-        });
-
-
-
-        const delBtn = document.createElement("button");
-
-        delBtn.type = "button";
-
-        delBtn.className = "btn-del";
-
-        delBtn.textContent = "×";
-
-        delBtn.title = "Hapus baris";
-
-        delBtn.addEventListener("click", () => {
-
-          if (items.length > 1) {
-
-            items.splice(idx, 1);
-
-          } else {
-
-            items[0] = { name: "", amount: 0 };
-
-          }
-
-          renderItems();
-
-          recalculate();
-
-        });
-
-
-
-        row.appendChild(nameInput);
-
-        row.appendChild(valInput);
-
-        row.appendChild(delBtn);
-
-        saldoListEl.appendChild(row);
-
-      });
-
-    }
-
-
-
-    function recalculate() {
-
+    function getSummaryData() {
       const totalDaftar = items.reduce((sum, item) => sum + (item.amount || 0), 0);
-
       const reseller = parseAngka(saldoResellerEl.value);
-
       const komisi = parseAngka(komisiEl.value);
-
       const totalPengurang = reseller + komisi;
-
       const hasil = totalDaftar - totalPengurang;
-
-
-
-      document.getElementById("totalSaldoBadge").textContent = formatRibuan(totalDaftar);
-
-      document.getElementById("totalPengurangBadge").textContent = formatRibuan(totalPengurang);
-
-      document.getElementById("summaryDaftar").textContent = formatRibuan(totalDaftar);
-
-      document.getElementById("summaryPengurang").textContent = formatRibuan(totalPengurang);
-
-
-
-      const hasilEl = document.getElementById("hasilAkhir");
-
-      hasilEl.textContent = formatRibuan(hasil);
-
-      hasilEl.classList.toggle("negative", hasil < 0);
-
+      return { totalDaftar, reseller, komisi, totalPengurang, hasil };
     }
 
-
-
-    [saldoResellerEl, komisiEl].forEach((el) => {
-
-      el.addEventListener("input", (e) => {
-
-        const num = parseAngka(e.target.value);
-
-        e.target.value = formatRibuan(num);
-
-        recalculate();
-
-      });
-
-    });
-
-
-
-    document.getElementById("btnAddRow").addEventListener("click", () => {
-
-      items.push({ name: "", amount: 0 });
-
-      renderItems();
-
-      recalculate();
-
-    });
-
-
-
-    document.getElementById("btnReset").addEventListener("click", () => {
-
-      items = [{ name: "OH: kenzie", amount: 0 }, { name: "IP: DIGIFLAZZ", amount: 0 }];
-
-      saldoResellerEl.value = "0";
-
-      komisiEl.value = "0";
-
-      renderItems();
-
-      recalculate();
-
-      showToast("Semua input direset");
-
-    });
-
-
-
-    // Copy WhatsApp
-
-    document.getElementById("btnCopyWa").addEventListener("click", () => {
-
+    function buildWaText() {
       const today = new Date().toLocaleDateString("id-ID", {
-
         day: "2-digit",
-
         month: "short",
-
         year: "numeric"
-
       });
-
-      const totalDaftar = items.reduce((sum, item) => sum + (item.amount || 0), 0);
-
-      const reseller = parseAngka(saldoResellerEl.value);
-
-      const komisi = parseAngka(komisiEl.value);
-
-      const totalPengurang = reseller + komisi;
-
-      const hasil = totalDaftar - totalPengurang;
-
-
+      const { totalDaftar, reseller, komisi, totalPengurang, hasil } = getSummaryData();
 
       const listLines = items
-
         .filter((i) => i.name.trim() !== "" || i.amount !== 0)
-
         .map((i) => `• ${i.name || "Saldo"}: ${formatRibuan(i.amount)}`)
-
         .join("\n");
 
-
-
-      const text = [
-
+      return [
         `*REKAP SALDO (${today})*`,
-
         "",
-
         "*Daftar Saldo:*",
-
         listLines || "• 0",
-
         `Total Daftar Saldo: *${formatRibuan(totalDaftar)}*`,
-
         "",
-
         "*Pengurang:*",
-
         `• Saldo Reseller: ${formatRibuan(reseller)}`,
-
         `• Komisi: ${formatRibuan(komisi)}`,
-
         `Total Pengurang: *${formatRibuan(totalPengurang)}*`,
-
         "",
-
         `*Hasil Akhir: ${formatRibuan(hasil)}*`
-
       ].join("\n");
+    }
 
-
-
-      navigator.clipboard.writeText(text).then(() => {
-
-        showToast("Ringkasan WhatsApp disalin!");
-
-      });
-
-    });
-
-
-
-    // Modal Paste Laporan
-
-    const pasteModal = document.getElementById("pasteModal");
-
-    const pasteInput = document.getElementById("pasteInput");
-
-
-
-    document.getElementById("btnOpenPaste").addEventListener("click", () => {
-
-      pasteModal.classList.add("open");
-
-      pasteInput.focus();
-
-    });
-
-
-
-    document.getElementById("btnClosePaste").addEventListener("click", () => {
-
-      pasteModal.classList.remove("open");
-
-    });
-
-
-
-    pasteModal.addEventListener("click", (e) => {
-
-      if (e.target === pasteModal) pasteModal.classList.remove("open");
-
-    });
-
-
-
-    document.addEventListener("keydown", (e) => {
-
-      if (e.key === "Escape") pasteModal.classList.remove("open");
-
-    });
-
-
-
-    document.getElementById("btnFillSample").addEventListener("click", () => {
-
-      pasteInput.value = `Daftar Saldo:
-
-OH: kenzie - 2.116.195
-
-IP: DIGIFLAZZ - 1.680.314
-
-
-
-Saldo Reseller 8.298.898
-
-Komisi 432.022`;
-
-    });
-
-
-
-    document.getElementById("btnClipboard").addEventListener("click", async () => {
-
-      try {
-
-        const clip = await navigator.clipboard.readText();
-
-        pasteInput.value = clip;
-
-      } catch (err) {
-
-        showToast("Gagal membaca clipboard, tempel manual");
-
+    function generatePdfBlob() {
+      if (!window.jspdf || !window.jspdf.jsPDF) {
+        return null;
       }
 
-    });
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const margin = 16;
+      const contentWidth = pageWidth - margin * 2;
+      let y = 20;
 
-
-
-    document.getElementById("btnProcessPaste").addEventListener("click", () => {
-
-      const raw = pasteInput.value.trim();
-
-      if (!raw) return;
-
-
-
-      const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-
-      const newItems = [];
-
-      let foundReseller = null;
-
-      let foundKomisi = null;
-
-
-
-      lines.forEach((line) => {
-
-        const lower = line.toLowerCase();
-
-        if (lower.startsWith("daftar saldo") || lower.startsWith("rekap saldo")) return;
-
-        if (lower.startsWith("saldo suplier")) return;
-
-
-
-        const numMatch = line.match(/(-?[0-9][0-9.,]*)\s*$/);
-
-        if (!numMatch) return;
-
-        const val = parseAngka(numMatch[1]);
-
-
-
-        if (lower.includes("reseller")) {
-
-          foundReseller = val;
-
-        } else if (lower.includes("komisi")) {
-
-          foundKomisi = val;
-
-        } else {
-
-          const labelPart = line
-
-            .slice(0, numMatch.index)
-
-            .replace(/[-:\u2022*]+\s*$/, "")
-
-            .replace(/^[\u2022*-]+\s*/, "")
-
-            .trim();
-
-          if (labelPart) {
-
-            newItems.push({ name: labelPart, amount: val });
-
-          }
-
-        }
-
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+      const timeStr = now.toLocaleTimeString("id-ID", {
+        hour: "2-digit",
+        minute: "2-digit"
       });
 
+      const { totalDaftar, reseller, komisi, totalPengurang, hasil } = getSummaryData();
 
+      // Judul
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(16);
+      doc.setTextColor(15, 23, 42);
+      doc.text("LAPORAN REKAP SALDO", margin, y);
 
-      if (newItems.length > 0) items = newItems;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text(dateStr, pageWidth - margin, y, { align: "right" });
 
-      if (foundReseller !== null) saldoResellerEl.value = formatRibuan(foundReseller);
+      y += 4;
+      doc.setDrawColor(15, 23, 42);
+      doc.setLineWidth(0.6);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 9;
 
-      if (foundKomisi !== null) komisiEl.value = formatRibuan(foundKomisi);
+      // Bagian Daftar Saldo
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text("DAFTAR SALDO", margin, y);
+      y += 4;
 
+      // Header tabel daftar saldo
+      doc.setFillColor(241, 245, 249);
+      doc.rect(margin, y, contentWidth, 7.5, "F");
+      doc.setDrawColor(203, 213, 225);
+      doc.setLineWidth(0.2);
+      doc.rect(margin, y, contentWidth, 7.5);
 
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      doc.text("No", margin + 3, y + 5);
+      doc.text("Keterangan Saldo", margin + 15, y + 5);
+      doc.text("Nominal", pageWidth - margin - 3, y + 5, { align: "right" });
+      y += 7.5;
 
-      renderItems();
+      const activeItems = items.filter((i) => i.name.trim() !== "" || i.amount !== 0);
+      const rowsToRender = activeItems.length > 0 ? activeItems : [{ name: "-", amount: 0 }];
 
-      recalculate();
+      doc.setFont("helvetica", "normal");
+      rowsToRender.forEach((item, idx) => {
+        doc.rect(margin, y, contentWidth, 7.5);
+        doc.text(String(idx + 1), margin + 3, y + 5);
+        doc.text(item.name || "Saldo", margin + 15, y + 5);
+        doc.text(formatRibuan(item.amount), pageWidth - margin - 3, y + 5, { align: "right" });
+        y += 7.5;
+      });
 
-      pasteModal.classList.remove("open");
+      // Subtotal Daftar Saldo
+      doc.setFillColor(248, 250, 252);
+      doc.rect(margin, y, contentWidth, 8, "F");
+      doc.rect(margin, y, contentWidth, 8);
+      doc.setFont("helvetica", "bold");
+      doc.text("Total Daftar Saldo", margin + 3, y + 5.3);
+      doc.text(formatRibuan(totalDaftar), pageWidth - margin - 3, y + 5.3, { align: "right" });
+      y += 14;
 
-      showToast("Laporan berhasil diterapkan!");
+      // Bagian Pengurang
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(30, 41, 59);
+      doc.text("SALDO RESELLER & KOMISI", margin, y);
+      y += 4;
 
+      const pengurangRows = [
+        ["Saldo Reseller", formatRibuan(reseller)],
+        ["Komisi", formatRibuan(komisi)]
+      ];
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(15, 23, 42);
+      pengurangRows.forEach(([label, val]) => {
+        doc.rect(margin, y, contentWidth, 7.5);
+        doc.text(label, margin + 3, y + 5);
+        doc.text(val, pageWidth - margin - 3, y + 5, { align: "right" });
+        y += 7.5;
+      });
+
+      // Total Pengurang
+      doc.setFillColor(248, 250, 252);
+      doc.rect(margin, y, contentWidth, 8, "F");
+      doc.rect(margin, y, contentWidth, 8);
+      doc.setFont("helvetica", "bold");
+      doc.text("Total Pengurang (Reseller + Komisi)", margin + 3, y + 5.3);
+      doc.text(formatRibuan(totalPengurang), pageWidth - margin - 3, y + 5.3, { align: "right" });
+      y += 14;
+
+      // Kotak Hasil Akhir
+      doc.setFillColor(15, 23, 42);
+      doc.roundedRect(margin, y, contentWidth, 28, 3, 3, "F");
+
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(203, 213, 225);
+      doc.text("Total Daftar Saldo", margin + 5, y + 7);
+      doc.text(formatRibuan(totalDaftar), pageWidth - margin - 5, y + 7, { align: "right" });
+
+      doc.text("Total Pengurang", margin + 5, y + 13);
+      doc.text(formatRibuan(totalPengurang), pageWidth - margin - 5, y + 13, { align: "right" });
+
+      doc.setDrawColor(71, 85, 105);
+      doc.line(margin + 5, y + 16, pageWidth - margin - 5, y + 16);
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(12);
+      doc.setTextColor(56, 189, 248);
+      doc.text("HASIL AKHIR", margin + 5, y + 23);
+      doc.text(formatRibuan(hasil), pageWidth - margin - 5, y + 23, { align: "right" });
+
+      y += 38;
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Dibuat pada ${dateStr}, pukul ${timeStr} WIB`, pageWidth - margin, y, { align: "right" });
+
+      return doc.output("blob");
+    }
+
+    async function sharePdfToWhatsApp() {
+      const pdfBlob = generatePdfBlob();
+      if (!pdfBlob) {
+        showToast("Library PDF butuh koneksi internet saat pertama kali memuat");
+        return;
+      }
+
+      const isoDate = new Date().toISOString().slice(0, 10);
+      const fileName = `Rekap-Saldo-${isoDate}.pdf`;
+      const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+      const waText = buildWaText();
+
+      // Web Share API (utama di HP Android / iOS / browser modern)
+      if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+        try {
+          await navigator.share({
+            title: "Laporan Rekap Saldo",
+            text: waText,
+            files: [pdfFile]
+          });
+          showToast("Menu bagikan dibuka!");
+          return;
+        } catch (err) {
+          if (err && err.name === "AbortError") {
+            showToast("Berbagi dibatalkan");
+            return;
+          }
+        }
+      }
+
+      // Fallback untuk browser desktop / lingkungan yang tidak mendukung share file langsung:
+      // Unduh file PDF lalu buka WhatsApp Web / aplikasi WA dengan ringkasan teks
+      const url = URL.createObjectURL(pdfBlob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 4000);
+
+      showToast(`PDF ${fileName} diunduh. Membuka WhatsApp...`);
+      setTimeout(() => {
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(waText)}`;
+        window.open(waUrl, "_blank", "noopener,noreferrer");
+      }, 500);
+    }
+
+    function renderItems() {
+      saldoListEl.innerHTML = "";
+      items.forEach((item, idx) => {
+        const row = document.createElement("div");
+        row.className = "item-row";
+
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.placeholder = "Nama Saldo";
+        nameInput.value = item.name;
+        nameInput.addEventListener("input", (e) => {
+          items[idx].name = e.target.value;
+        });
+
+        const valInput = document.createElement("input");
+        valInput.type = "text";
+        valInput.className = "num-input";
+        valInput.inputMode = "numeric";
+        valInput.value = formatRibuan(item.amount);
+        valInput.addEventListener("input", (e) => {
+          const num = parseAngka(e.target.value);
+          items[idx].amount = num;
+          e.target.value = formatRibuan(num);
+          recalculate();
+        });
+
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "btn-del";
+        delBtn.textContent = "×";
+        delBtn.title = "Hapus baris";
+        delBtn.addEventListener("click", () => {
+          if (items.length > 1) {
+            items.splice(idx, 1);
+          } else {
+            items[0] = { name: "", amount: 0 };
+          }
+          renderItems();
+          recalculate();
+        });
+
+        row.appendChild(nameInput);
+        row.appendChild(valInput);
+        row.appendChild(delBtn);
+        saldoListEl.appendChild(row);
+      });
+    }
+
+    function recalculate() {
+      const { totalDaftar, totalPengurang, hasil } = getSummaryData();
+
+      document.getElementById("totalSaldoBadge").textContent = formatRibuan(totalDaftar);
+      document.getElementById("totalPengurangBadge").textContent = formatRibuan(totalPengurang);
+      document.getElementById("summaryDaftar").textContent = formatRibuan(totalDaftar);
+      document.getElementById("summaryPengurang").textContent = formatRibuan(totalPengurang);
+
+      const hasilEl = document.getElementById("hasilAkhir");
+      hasilEl.textContent = formatRibuan(hasil);
+      hasilEl.classList.toggle("negative", hasil < 0);
+    }
+
+    [saldoResellerEl, komisiEl].forEach((el) => {
+      el.addEventListener("input", (e) => {
+        const num = parseAngka(e.target.value);
+        e.target.value = formatRibuan(num);
+        recalculate();
+      });
     });
 
+    document.getElementById("btnAddRow").addEventListener("click", () => {
+      items.push({ name: "", amount: 0 });
+      renderItems();
+      recalculate();
+    });
 
+    document.getElementById("btnReset").addEventListener("click", () => {
+      items = [{ name: "OH: kenzie", amount: 0 }, { name: "IP: DIGIFLAZZ", amount: 0 }];
+      saldoResellerEl.value = "0";
+      komisiEl.value = "0";
+      renderItems();
+      recalculate();
+      showToast("Semua input direset");
+    });
+
+    document.getElementById("btnSharePdfWa").addEventListener("click", sharePdfToWhatsApp);
+
+    // Copy WhatsApp
+    document.getElementById("btnCopyWa").addEventListener("click", () => {
+      navigator.clipboard.writeText(buildWaText()).then(() => {
+        showToast("Teks WhatsApp disalin!");
+      });
+    });
+
+    // Modal Paste Laporan
+    const pasteModal = document.getElementById("pasteModal");
+    const pasteInput = document.getElementById("pasteInput");
+
+    document.getElementById("btnOpenPaste").addEventListener("click", () => {
+      pasteModal.classList.add("open");
+      pasteInput.focus();
+    });
+
+    document.getElementById("btnClosePaste").addEventListener("click", () => {
+      pasteModal.classList.remove("open");
+    });
+
+    pasteModal.addEventListener("click", (e) => {
+      if (e.target === pasteModal) pasteModal.classList.remove("open");
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") pasteModal.classList.remove("open");
+    });
+
+    document.getElementById("btnFillSample").addEventListener("click", () => {
+      pasteInput.value = `Daftar Saldo:
+OH: kenzie - 2.116.195
+IP: DIGIFLAZZ - 1.680.314
+
+Saldo Reseller 8.298.898
+Komisi 432.022`;
+    });
+
+    document.getElementById("btnClipboard").addEventListener("click", async () => {
+      try {
+        const clip = await navigator.clipboard.readText();
+        pasteInput.value = clip;
+      } catch (err) {
+        showToast("Gagal membaca clipboard, tempel manual");
+      }
+    });
+
+    document.getElementById("btnProcessPaste").addEventListener("click", () => {
+      const raw = pasteInput.value.trim();
+      if (!raw) return;
+
+      const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+      const newItems = [];
+      let foundReseller = null;
+      let foundKomisi = null;
+
+      lines.forEach((line) => {
+        const lower = line.toLowerCase();
+        if (lower.startsWith("daftar saldo") || lower.startsWith("rekap saldo")) return;
+        if (lower.startsWith("saldo suplier")) return;
+
+        const numMatch = line.match(/(-?[0-9][0-9.,]*)\s*$/);
+        if (!numMatch) return;
+        const val = parseAngka(numMatch[1]);
+
+        if (lower.includes("reseller")) {
+          foundReseller = val;
+        } else if (lower.includes("komisi")) {
+          foundKomisi = val;
+        } else {
+          const labelPart = line
+            .slice(0, numMatch.index)
+            .replace(/[-:\u2022*]+\s*$/, "")
+            .replace(/^[\u2022*-]+\s*/, "")
+            .trim();
+          if (labelPart) {
+            newItems.push({ name: labelPart, amount: val });
+          }
+        }
+      });
+
+      if (newItems.length > 0) items = newItems;
+      if (foundReseller !== null) saldoResellerEl.value = formatRibuan(foundReseller);
+      if (foundKomisi !== null) komisiEl.value = formatRibuan(foundKomisi);
+
+      renderItems();
+      recalculate();
+      pasteModal.classList.remove("open");
+      showToast("Laporan berhasil diterapkan!");
+    });
 
     renderItems();
-
     recalculate();
-
   </script>
-
 </body>
-
 </html>
